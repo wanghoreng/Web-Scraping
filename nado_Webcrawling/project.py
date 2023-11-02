@@ -46,7 +46,8 @@ def scrape_weather() :
   min_temp = soup.find("span", attrs={"class": "lowest"}).get_text().strip()
   max_temp = soup.find("span", attrs={"class": "highest"}).get_text().strip()
   # 오전 강수확률 OO% / 오후 강수확률 OO%
-  rain_rate = soup.find_all("span", attrs={"class":"weather_left"})
+  rain_rate = soup.find_all("span", attrs={"class":"weather_inner"})
+
   # 미세먼지 
   dust1 = soup.find_all("li",attrs={"class":"item_today level1"})
 
