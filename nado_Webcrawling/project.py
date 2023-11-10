@@ -49,7 +49,7 @@ def scrape_weather() :
   rain_rate = soup.find_all("span", attrs={"class":"weather_inner"})
 
   # 미세먼지 
-  dust1 = soup.find_all("li",attrs={"class":"item_today level1"})
+  dust1 = soup.find_all("li",attrs={"class":"item_today level2"})
 
 
   # 출력 
