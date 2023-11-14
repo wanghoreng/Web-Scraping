@@ -10,6 +10,29 @@
 import re
 import requests
 from bs4 import BeautifulSoup
+import json
+import time
+
+
+# 카카오톡 Access 토큰 
+KAKAO_TOKEN = "WHbygHQ7AZTtGvMRGqLzwWcSSwoWAtxDWFEKPXPrAAABi8t_Fxf-oZq-Jypvmw"
+
+# 카카오톡 API 를 통해 전송하는 함수 
+def sendTo_Kakao(text) :
+  headers = {"Authorization":"Bearer " + KAKAO_TOKEN}
+  url = "https://kapi.kakao.com/v2/api/talk/memo/default/send"
+  post = {
+    "object_type": "text",
+        "text": text,
+        "link": {
+            "web_url": "https://developers.kakao.com",
+            "mobile_web_url": "https://developers.kakao.com"
+        },
+        "button_title": "바로 확인"
+  }
+
+  data = {"template_object": json.dumps(post)}
+  return requests.post(url, headers=headers, data=data)
 
 
 # bs4 를 통해 데이터 가져오는 함수 
@@ -35,7 +58,8 @@ def img_find(news) :
 
 # 날씨정보 가져오는 함수 
 def scrape_weather() : 
-  print("[오늘의 날씨]")
+  weather_text = ""
+  weather_text += "[오늘의 날씨]\n"
   url = "https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&query=%EC%84%9C%EC%9A%B8+%EB%82%A0%EC%94%A8&oquery=%EA%B2%BD%EA%B8%B0%EB%8F%84+%EC%9A%A9%EC%9D%B8%EC%8B%9C+%EA%B8%B0%ED%9D%A5%EA%B5%AC+%EA%B5%AC%EA%B0%88%EB%8F%99+%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80&tqi=ig%2BwtwqVN8VssuOrpy0ssssss48-115725"
   soup = create_soup(url)
   
@@ -53,14 +77,15 @@ def scrape_weather() :
 
 
   # 출력 
-  print(f"{cast[0]} {cast[1]} {cast[2]}💡 ({cast[3]})")
-  print("{} ({} / {})".format(curr_temp, min_temp, max_temp))
-  print(f"강수확률 {rain_rate[0].get_text().strip()} / {rain_rate[1].get_text().strip()} ")
-  print()
-  print(f"{dust1[0].get_text().strip()}")
-  print(f"{dust1[1].get_text().strip()}")
-  print()
-
+  weather_text += f"{cast[0]} {cast[1]} {cast[2]}💡 ({cast[3]}\n"
+  weather_text += "{} ({} / {})\n".format(curr_temp, min_temp, max_temp)
+  weather_text += f"강수확률 {rain_rate[0].get_text().strip()} / {rain_rate[1].get_text().strip()} \n"
+  # print()
+  weather_text += f"{dust1[0].get_text().strip()}\n"
+  weather_text += f"{dust1[1].get_text().strip()}\n"
+  # print()
+  r = sendTo_Kakao(weather_text)
+  print(r.text)
 
 
 # 헤드라인 뉴스 정보 가져오는 함수
@@ -117,6 +142,6 @@ def scrape_english() :
 
 if __name__ == "__main__" : 
   scrape_weather() # 오늘의 날씨 정보 가져오기 
-  scrape_headline_news() # 헤드라인 뉴스 가져오기
-  scrape_it_news() # IT 뉴스 가져오기
-  scrape_english() # 영어 회화 지문 가져오기
+  #scrape_headline_news() # 헤드라인 뉴스 가져오기
+  #scrape_it_news() # IT 뉴스 가져오기
+  #scrape_english() # 영어 회화 지문 가져오기
