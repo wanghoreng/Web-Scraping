@@ -14,8 +14,8 @@ from bs4 import BeautifulSoup
 import json
 
 
-# 카카오톡 Access 토큰 
-KAKAO_TOKEN = "ycDdxe5g2GNTef1n4nypKxn9wWQ53unh0C8KKiWQAAABi8uFQyf-oZq-Jypvmw"
+# 카카오톡 Access 토큰 => 12시간 마다 만료
+KAKAO_TOKEN = "qhWB_b4tp69tjD2P2Ow803VnDVjGL5tAHzUKKiWQAAABi84Np9D-oZq-Jypvmw"
 
 # 카카오톡 API 를 통해 전송하는 함수 
 def sendTo_Kakao(text) :
@@ -87,10 +87,10 @@ def scrape_weather() :
   else : 
     weather_text += "겨울아닌 날씨는 잘 챙겨입을 수 있지?? ㅎㅋㅋ 패션 챙기자~ 🐯"
 
-  #r = sendTo_Kakao(weather_text)
-  #print(r.text)
-  return weather_text
+  r = sendTo_Kakao(weather_text)
+  print(r.text)
+
 
 
 if __name__ == "__main__" : 
-  print(scrape_weather()) # 오늘의 날씨 정보 가져오기 
+  scrape_weather() # 오늘의 날씨 정보 가져오기 
